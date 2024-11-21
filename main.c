@@ -16,29 +16,34 @@ int max(int a, int b)
 
 void reduce_list(struct subtitle_node* list)
 {
-    if (list->next == NULL)
+    if (list == NULL || list->next == NULL)
     {
         return;
     }
     else if (list->end >= list->next->begin)
     {
         list->end = max(list->end, list->next->end);
+        struct subtitle_node* tmp = list->next;
         list->next = list->next->next;
-        reduce_linked_list(list);
+        free(tmp);
+        reduce_list(list);
     }
     else
     {
-        reduce_linked_list(list->next);
+        reduce_list(list->next);
     }
 }
 
 void print_list(struct subtitle_node* list)
 {
-    while (list != NULL)
+    if (list == NULL) return;
+
+    while (list->next != NULL)
     {
         printf("[%d, %d] -> ", list->begin, list->end);
         list = list->next;
     }
+    printf("[%d, %d]", list->begin, list->end);
 }
 
 struct subtitle_node* random_node(int begin)
@@ -53,7 +58,7 @@ struct subtitle_node* random_node(int begin)
 
 int main()
 {
-    srand(12); // Set a random seed for testing
+    srand(12); // Set the random seed
     struct subtitle_node* head = NULL;
 
     int begin = 0;
